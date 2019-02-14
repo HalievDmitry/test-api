@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Document</title>
+    <!--<script src="src/js/lib/jquery-3.3.1.min.js"></script>-->
+    <!--<script src="src/js/lib/knockout-3.4.2.js"></script>-->
+    <script src="src/js/lib/require-2.3.6.js"></script>
+    <script src="src/js/require-config.js"></script>
+    <script src="./src/js/main.js"></script>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>Quote ID</td>
+            <td></td>
+            <td data-bind="text: customerData().quote_id"></td>
+        </tr>
+        <tr>
+            <td>Customer ID</td>
+            <td></td>
+            <td data-bind="text: customerData().customer_id"></td>
+        </tr>
+        <tr>
+            <td>Customer Token</td>
+            <td></td>
+            <td data-bind="text: customerData().customer_token"></td>
+        </tr>
+    </table>
+
+    <button data-bind="click: loginGoogle">Login with Google</button>
+    <button data-bind="click: loginFacebook">Login with Facebook</button>
+    <button data-bind="click: signIn">Sign in</button>
+
+    <!--<span data-bind="foreach: customerData">-->
+        <!--<span data-bind="text: customer_id "></span>-->
+    <!--</span>-->
+
+
+    <!--<form action="">-->
+        <!--<span data-bind="text: 'asd'"></span>-->
+        <!--<input type="text" id="customerData" value=""/>-->
+        <!--<button id="google-login">Login with Google</button>-->
+        <!--<button id="facebook-login">Login with Facebook</button>-->
+    <!--</form>-->
+</body>
+</html>
