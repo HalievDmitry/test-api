@@ -30,6 +30,11 @@ require([
                     rest.getCustomerCart().then(function (data) {
                         console.log(data);
                         self.cart(data);
+                        rest.getCustomerCartTotals().then(function (data) {
+                            console.log(data);
+                        }).catch(function (err) {
+                            console.error(err);
+                        });
                     }).catch(function (err) {
                         console.error(err);
                     });
@@ -90,6 +95,14 @@ require([
                 console.error(err);
             });
         };
+
+        this.createAccount = function () {
+            rest.createCustomer().then(function (data) {
+                console.log(data);
+            }).catch(function (err) {
+                console.error(err);
+            });
+        }
 
     }
     ko.applyBindings(new mainPageViewModel());

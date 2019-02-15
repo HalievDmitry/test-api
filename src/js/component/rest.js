@@ -53,9 +53,31 @@ define([
             var url = buildUrl('rest/V1/fisha-reactcheckout/authenticate'),
                 data = {
                     "email": "dima.k@fisha.co.il",
-                    "password": "!fisha123$"
+                    "password": "!dimatest$"
+                };
+            return post(url, data);
+        },
+
+        getCustomerCartTotals: function () {
+            var url = buildUrl('rest/V1/carts/mine/totals');
+            return get(url);
+        },
+
+        createCustomer: function () {
+            var url = buildUrl('rest/V1/customers'),
+                data = {
+                    "customer": {
+                        "email": "dima.k+3@fisha.co.il",
+                        "firstname": "dmitry",
+                        "lastname": "test",
+                        "extension_attributes": {
+                            "is_subscribed": true
+                        }
+                    },
+                    "password": "!dimatest$"
                 };
             return post(url, data);
         }
+
     };
 });
