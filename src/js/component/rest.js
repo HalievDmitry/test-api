@@ -3,10 +3,10 @@ define([
 ], function ($) {
     'use strict';
 
-    var base_url = 'https://magento22.org/';
-    var buildUrl = function (path) {
-        return base_url + path;
-    };
+    var base_url = 'https://magento22.org/',
+        buildUrl = function (path) {
+            return base_url + path;
+        };
     var get = function (url) {
         return new Promise(function (resolve, reject) {
             $.get(url).done(function (data) {
@@ -63,6 +63,12 @@ define([
             return get(url);
         },
 
+        getGuestCartTotals: function (quoteId) {
+            var url = buildUrl('rest/default/V1/guest-carts/'+ quoteId +'/totals');
+
+            return get(url);
+        },
+
         createCustomer: function () {
             var url = buildUrl('rest/V1/customers'),
                 data = {
@@ -76,6 +82,139 @@ define([
                     },
                     "password": "!dimatest$"
                 };
+            return post(url, data);
+        },
+
+        getGuestShippingMethods: function (quoteId) {
+            var url = buildUrl('rest/default/V1/guest-carts/'+ quoteId +'/estimate-shipping-methods'),
+                data = {
+                    "address":
+                        {
+                            "region_id":null,
+                            "country_id":"US",
+                            "postcode":null
+                        }
+                };
+
+            return post(url, data);
+        },
+
+        getCustomerShippingMethods: function () {
+            var url = buildUrl('rest/default/V1/carts/mine/estimate-shipping-methods'),
+                data = {
+                    "address":
+                        {
+                            "region_id":null,
+                            "country_id":"US",
+                            "postcode":null
+                        }
+                };
+            return post(url, data);
+        },
+
+        setGuestShipping: function (cartId) {
+            var url = buildUrl('rest/default/V1/guest-carts/' + cartId + '/shipping-information'),
+                data = {
+                    "addressInformation":{
+                        "shipping_address":{
+                            "countryId":"SY",
+                            "region":"",
+                            "street":[
+                                "asdasdasd"
+                            ],
+                            "company":"",
+                            "telephone":"123123123123",
+                            "postcode":"123123",
+                            "city":"asdasdasd",
+                            "firstname":"Dmitry",
+                            "lastname":"Khaliev"
+                        },
+                        "billing_address":{
+                            "countryId":"SY",
+                            "region":"",
+                            "street":[
+                                "asdasdasd"
+                            ],
+                            "company":"",
+                            "telephone":"123123123123",
+                            "postcode":"123123",
+                            "city":"asdasdasd",
+                            "firstname":"Dmitry",
+                            "lastname":"Khaliev",
+                            "saveInAddressBook":null
+                        },
+                        "shipping_method_code":"flatrate",
+                        "shipping_carrier_code":"flatrate"
+                    }
+                };
+
+            return post(url, data);
+        },
+
+        setCustomerShipping: function () {
+            var url = buildUrl('rest/default/V1/carts/mine/shipping-information'),
+                data = {
+                    "addressInformation":{
+                        "shipping_address":{
+                            "countryId":"SY",
+                            "region":"",
+                            "street":[
+                                "asdasdasd"
+                            ],
+                            "company":"",
+                            "telephone":"123123123123",
+                            "postcode":"123123",
+                            "city":"asdasdasd",
+                            "firstname":"Dmitry",
+                            "lastname":"Khaliev"
+                        },
+                        "billing_address":{
+                            "countryId":"SY",
+                            "region":"",
+                            "street":[
+                                "asdasdasd"
+                            ],
+                            "company":"",
+                            "telephone":"123123123123",
+                            "postcode":"123123",
+                            "city":"asdasdasd",
+                            "firstname":"Dmitry",
+                            "lastname":"Khaliev",
+                            "saveInAddressBook":null
+                        },
+                        "shipping_method_code":"flatrate",
+                        "shipping_carrier_code":"flatrate"
+                    }
+                };
+
+            return post(url, data);
+        },
+
+        placePaypal: function (cartId) {
+            var url = cartId ? buildUrl('rest/default/V1/guest-carts/' + cartId + '/set-payment-information') :
+                buildUrl('rest/default/V1/carts/mine/set-payment-information'),
+                data = {
+                    "cartId":cartId,
+                    "email":"dima.k@fisha.co.il",
+                    "paymentMethod":{
+                        "method":"paypal_express"
+                    },
+                    "billingAddress":{
+                        "countryId":"SY",
+                        "region":"",
+                        "street":[
+                            "asdasdasd"
+                        ],
+                        "company":"",
+                        "telephone":"123123123123",
+                        "postcode":"123123",
+                        "city":"asdasdasd",
+                        "firstname":"Dmitry",
+                        "lastname":"Khaliev",
+                        "saveInAddressBook":null
+                    }
+                };
+
             return post(url, data);
         }
 

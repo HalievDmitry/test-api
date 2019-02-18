@@ -39,8 +39,14 @@ require([
                         console.error(err);
                     });
                 } else if(data.quote_id) {
-                    rest.getGuestCart(data.quote_id).then(function (data) {
+                    var quoteId = data.quote_id;
+                    rest.getGuestCart(quoteId).then(function (data) {
                         console.log(data);
+                        rest.getGuestCartTotals(quoteId).then(function (data) {
+                            console.log(data);
+                        }).catch(function (err) {
+                            console.error(err);
+                        });
                         self.cart(data);
                     }).catch(function (err) {
                         console.error(err);
@@ -81,11 +87,19 @@ require([
         };
 
         this.loginGoogle = function () {
-            window.open('http://magento22.org/sociallogin/social/login/authen/popup/type/google/', 'Google', self.frame.getPopupParams());
+            this.customerData().social_config.forEach(function (config) {
+                if (config.label == 'Google') {
+                    window.open(config.link, config.label, self.frame.getPopupParams());
+                }
+            });
         };
 
         this.loginFacebook = function () {
-            window.open('http://magento22.org/sociallogin/social/login/authen/popup/type/facebook/', 'Facebook', self.frame.getPopupParams());
+            this.customerData().social_config.forEach(function (config) {
+                if (config.label == 'Facebook') {
+                    window.open(config.link, config.label, self.frame.getPopupParams());
+                }
+            });
         };
 
         this.signIn = function () {
@@ -102,7 +116,54 @@ require([
             }).catch(function (err) {
                 console.error(err);
             });
-        }
+        };
+
+        this.getGuestShippings = function () {
+            rest.getGuestShippingMethods(this.customerData().quote_id).then(function (data) {
+                console.log(data);
+            }).catch(function (err) {
+                console.error(err);
+            });
+        };
+
+        this.getCustomerShippings = function () {
+            rest.getCustomerShippingMethods().then(function (data) {
+                console.log(data);
+            }).catch(function (err) {
+                console.error(err);
+            });
+        };
+
+        this.placePaypal = function () {
+            var quoteId;
+            if (!this.customerData().customer_id) {
+                quoteId = this.customerData().quote_id;
+            }
+            rest.placePaypal(quoteId).then(function (data) {
+                if (data === true) {
+                    console.log(data);
+                    window.location.href = 'https://magento22.org/paypal/express/start/';
+                }
+            }).catch(function (err) {
+                console.error(err);
+            });
+        };
+
+        this.setGuestShipping = function () {
+            rest.setGuestShipping(this.customerData().quote_id).then(function (data) {
+                console.log(data);
+            }).catch(function (err) {
+                console.error(err);
+            });
+        };
+
+        this.setCustomerShipping = function () {
+            rest.setCustomerShipping().then(function (data) {
+                console.log(data);
+            }).catch(function (err) {
+                console.error(err);
+            });
+        };
 
     }
     ko.applyBindings(new mainPageViewModel());
