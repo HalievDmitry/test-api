@@ -1,50 +1,25 @@
 define([
     'jquery',
     'component/url-builder',
-    'component/storage'
-], function ($, buildUrl, storage) {
+    'component/storage',
+    'component/ajax/client'
+], function ($, buildUrl, storage, client) {
     'use strict';
-
-    var get = function (url) {
-        return new Promise(function (resolve, reject) {
-            $.get(url).done(function (data) {
-                resolve(data);
-            }).fail(function (err) {
-                reject(err)
-            });
-        });
-    };
-
-    var post = function (url, data) {
-        return new Promise(function (resolve, reject) {
-            $.ajax({
-                method: 'post',
-                url: url,
-                data: JSON.stringify(data),
-                contentType: 'application/json'
-            }).done(function (data) {
-                resolve(data);
-            }).fail(function (err) {
-                reject(err)
-            });
-        });
-    }
-
 
     return {
         initSession: function () {
             var url = buildUrl('rest/V1/fisha-reactcheckout/session');
-            return get(url);
+            return client.get(url);
         },
 
         getGuestCart: function (quoteId) {
             var url = buildUrl('rest/V1/guest-carts/' + quoteId);
-            return get(url);
+            return client.get(url);
         },
 
         getCustomerCart: function () {
             var url = buildUrl('rest/V1/carts/mine');
-            return get(url);
+            return client.get(url);
         },
 
         signInCustomer: function () {
@@ -53,18 +28,14 @@ define([
                     "email": "dima.k@fisha.co.il",
                     "password": "!dimatest$"
                 };
-            return post(url, data);
+            return client.post(url, data);
         },
 
-        getCustomerCartTotals: function () {
-            var url = buildUrl('rest/V1/carts/mine/totals');
-            return get(url);
-        },
+        getTotals: function (cartId) {
+            var url = cartId ? buildUrl('rest/default/V1/guest-carts/'+ cartId +'/totals') :
+                buildUrl('rest/V1/carts/mine/totals');
 
-        getGuestCartTotals: function (quoteId) {
-            var url = buildUrl('rest/default/V1/guest-carts/'+ quoteId +'/totals');
-
-            return get(url);
+            return client.get(url);
         },
 
         createCustomer: function () {
@@ -80,7 +51,7 @@ define([
                     },
                     "password": "!dimatest$"
                 };
-            return post(url, data);
+            return client.post(url, data);
         },
 
         getGuestShippingMethods: function (quoteId) {
@@ -94,7 +65,7 @@ define([
                         }
                 };
 
-            return post(url, data);
+            return client.post(url, data);
         },
 
         getCustomerShippingMethods: function () {
@@ -107,7 +78,7 @@ define([
                             "postcode":null
                         }
                 };
-            return post(url, data);
+            return client.post(url, data);
         },
 
         setGuestShipping: function (cartId) {
@@ -146,7 +117,7 @@ define([
                     }
                 };
 
-            return post(url, data);
+            return client.post(url, data);
         },
 
         setCustomerShipping: function () {
@@ -185,7 +156,7 @@ define([
                     }
                 };
 
-            return post(url, data);
+            return client.post(url, data);
         },
 
         placePaypal: function (cartId) {
@@ -213,7 +184,7 @@ define([
                     }
                 };
 
-            return post(url, data);
+            return client.post(url, data);
         },
 
         placeSafecharge: function (cartId) {
@@ -242,7 +213,21 @@ define([
                     }
                 };
 
-            return post(url, data);
+            return client.post(url, data);
+        },
+
+        applyCoupon: function (cartId) {
+            var url = cartId ? buildUrl('rest/default/V1/guest-carts/'+cartId+'/coupons/'+ storage.couponCode()) :
+                buildUrl('rest/default/V1/carts/mine/coupons/'+code);
+
+            return client.put(url);
+        },
+
+        deleteCoupon: function (cartId) {
+            var url = cartId ? buildUrl('rest/default/V1/guest-carts/'+cartId+'/coupons') :
+                buildUrl('rest/default/V1/carts/mine/coupons');
+
+            return client.delete(url);
         }
 
     };

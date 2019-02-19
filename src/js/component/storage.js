@@ -12,7 +12,9 @@ define([
             cc_cid: '332',
             cc_type: null,
             cc_save: false
-        })
+        }),
+
+        couponCode: ko.observable('')
     }
 
 });

@@ -45,9 +45,13 @@
     <button data-bind="click: validateCard">Validate Card</button>
     <input type="text" data-bind="value: cardType()" />
 
-    <br/>
-    <br/>
-    <br/>
+    <br/><br/>
+    <input type="text" id="couponCode" data-bind="value: couponCode"/>
+    <button data-bind="click: applyCoupon">Apply Coupon</button>
+    <button data-bind="click: deleteCoupon">Delete Coupon</button>
+
+
+    <br/><br/>
     <form data-bind="submit: placeSafecharge">
         <div>
             <label>Card Number</label>
@@ -72,9 +76,16 @@
 
         <input type="hidden" name="cc_type" data-bind="value: creditCard().cc_type">
 
-
         <div><button type="submit">Submit SafeCharge</button></div>
     </form>
 
+    <div class="totals">
+        <div data-bind="foreach: Object.keys(totals())">
+            <div data-bind="if: typeof $parent.totals()[$data] !== 'object'">
+                <span data-bind="text: $data"></span>
+                <span data-bind="text: $parent.totals()[$data]"></span>
+            </div>
+        </span>
+    </div>
 </body>
 </html>

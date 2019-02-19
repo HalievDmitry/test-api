@@ -5,8 +5,9 @@ require([
     'component/credit-card/validator',
     'component/url-builder',
     'component/utils',
-    'component/storage'
-], function($, rest, ko, cardValidator, buildUrl, utils, storage) {
+    'component/storage',
+    'component/totals'
+], function($, rest, ko, cardValidator, buildUrl, utils, storage, totals) {
     'use strict';
 
     function mainPageViewModel() {
@@ -15,6 +16,8 @@ require([
         this.cart = ko.observable([]);
         this.creditCard = storage.creditCard;
         this.cardType = ko.observable('');
+        this.couponCode = storage.couponCode;
+        this.totals = totals;
 
         var self = this;
 
@@ -36,11 +39,7 @@ require([
                     rest.getCustomerCart().then(function (data) {
                         console.log(data);
                         self.cart(data);
-                        rest.getCustomerCartTotals().then(function (data) {
-                            console.log(data);
-                        }).catch(function (err) {
-                            console.error(err);
-                        });
+                        self.updateTotals();
                     }).catch(function (err) {
                         console.error(err);
                     });
@@ -48,11 +47,7 @@ require([
                     var quoteId = data.quote_id;
                     rest.getGuestCart(quoteId).then(function (data) {
                         console.log(data);
-                        rest.getGuestCartTotals(quoteId).then(function (data) {
-                            console.log(data);
-                        }).catch(function (err) {
-                            console.error(err);
-                        });
+                        self.updateTotals();
                         self.cart(data);
                     }).catch(function (err) {
                         console.error(err);
@@ -60,6 +55,19 @@ require([
                 }
             }
         });
+
+        this.updateTotals = function () {
+            var quoteId;
+            if (!this.customerData().customer_id) {
+                quoteId = this.customerData().quote_id;
+            }
+            rest.getTotals(quoteId).then(function (data) {
+                totals(data);
+                console.log(totals());
+            }).catch(function (err) {
+                console.error(err);
+            });
+        },
 
         this.frame = {
             getPopupParams: function (w, h, l, t) {
@@ -164,7 +172,7 @@ require([
                 data.cc_type = result.card.type;
                 this.creditCard($.extend(this.creditCard(), data));
             } else {
-g                return;
+                return;
             }
 
             if (!this.customerData().customer_id) {
@@ -201,6 +209,32 @@ g                return;
                     this.cardType(result.card.type);
                 }
             }
+        };
+        
+        this.applyCoupon = function (elem) {
+            var quoteId;
+            if (!this.customerData().customer_id) {
+                quoteId = this.customerData().quote_id;
+            }
+            rest.applyCoupon(quoteId).then(function (data) {
+                self.updateTotals();
+                console.log(data);
+            }).catch(function (err) {
+                console.error(err);
+            });
+        };
+
+        this.deleteCoupon = function () {
+            var quoteId;
+            if (!this.customerData().customer_id) {
+                quoteId = this.customerData().quote_id;
+            }
+            rest.deleteCoupon(quoteId).then(function (data) {
+                console.log(data);
+                self.updateTotals();
+            }).catch(function (err) {
+                console.error(err);
+            });
         };
 
     }
