@@ -1,12 +1,9 @@
 define([
-    'jquery'
-], function ($) {
+    'jquery',
+    'component/url-builder'
+], function ($, buildUrl) {
     'use strict';
 
-    var base_url = 'https://magento22.org/',
-        buildUrl = function (path) {
-            return base_url + path;
-        };
     var get = function (url) {
         return new Promise(function (resolve, reject) {
             $.get(url).done(function (data) {
@@ -198,6 +195,43 @@ define([
                     "email":"dima.k@fisha.co.il",
                     "paymentMethod":{
                         "method":"paypal_express"
+                    },
+                    "billingAddress":{
+                        "countryId":"SY",
+                        "region":"",
+                        "street":[
+                            "asdasdasd"
+                        ],
+                        "company":"",
+                        "telephone":"123123123123",
+                        "postcode":"123123",
+                        "city":"asdasdasd",
+                        "firstname":"Dmitry",
+                        "lastname":"Khaliev",
+                        "saveInAddressBook":null
+                    }
+                };
+
+            return post(url, data);
+        },
+
+        placeSafecharge: function (cartId) {
+            var url = cartId ? buildUrl('rest/default/V1/guest-carts/' + cartId + '/payment-information') :
+                buildUrl('rest/default/V1/carts/mine/payment-information'),
+                data = {
+                    "cartId":cartId,
+                    "email":"dima.k@fisha.co.il",
+                    "paymentMethod":{
+                        "method":"safecharge",
+                        "additional_data":{
+                            "cc_save":false,
+                            "cc_cid":"332",
+                            "cc_type":"MC",
+                            "cc_exp_year":"2022",
+                            "cc_exp_month":"3",
+                            "cc_number":"5333 3394 6913 0529",
+                            "cc_owner":"The Tester"
+                        }
                     },
                     "billingAddress":{
                         "countryId":"SY",

@@ -37,5 +37,13 @@
     <button data-bind="click: setGuestShipping">Set Guest Shipping Info</button>
     <button data-bind="click: setCustomerShipping">Set Customer Shipping Info</button>
     <button data-bind="click: placePaypal">PayPal</button>
+    <button data-bind="click: placeSafecharge">SafeCharge</button>
+
+    <br/>
+
+    <input type="text" id="carNumber" value="5333368254969676"/>
+    <button data-bind="click: validateCard">Validate Card</button>
+    <input type="text" data-bind="value: cardType()" />
+
 </body>
 </html>

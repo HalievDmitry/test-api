@@ -1,14 +1,19 @@
 require([
     'jquery',
     'rest',
-    'ko'
-], function($, rest, ko) {
+    'ko',
+    'component/credit-card/validator',
+    'component/url-builder'
+], function($, rest, ko, cardValidator, buildUrl) {
     'use strict';
 
     function mainPageViewModel() {
         this.customerData = ko.observable([]);
         this.guestCheckout = ko.observable(true);
         this.cart = ko.observable([]);
+
+        this.creditCard = ko.observable({});
+        this.cardType = ko.observable('');
 
         var self = this;
 
@@ -142,8 +147,20 @@ require([
             rest.placePaypal(quoteId).then(function (data) {
                 if (data === true) {
                     console.log(data);
-                    window.location.href = 'https://magento22.org/paypal/express/start/';
+                    window.location.href = buildUrl('paypal/express/start/');
                 }
+            }).catch(function (err) {
+                console.error(err);
+            });
+        };
+
+        this.placeSafecharge = function () {
+            var quoteId;
+            if (!this.customerData().customer_id) {
+                quoteId = this.customerData().quote_id;
+            }
+            rest.placeSafecharge(quoteId).then(function (data) {
+                window.location.href = buildUrl('checkout/onepage/success/');
             }).catch(function (err) {
                 console.error(err);
             });
@@ -163,6 +180,16 @@ require([
             }).catch(function (err) {
                 console.error(err);
             });
+        };
+
+        this.validateCard = function () {
+            var number = $('#carNumber').val();
+            if (number) {
+                var result = cardValidator(number);
+                if (result.isValid && result.card.type) {
+                    this.cardType(result.card.type);
+                }
+            }
         };
 
     }
