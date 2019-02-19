@@ -1,7 +1,8 @@
 define([
     'jquery',
-    'component/url-builder'
-], function ($, buildUrl) {
+    'component/url-builder',
+    'component/storage'
+], function ($, buildUrl, storage) {
     'use strict';
 
     var get = function (url) {
@@ -223,15 +224,7 @@ define([
                     "email":"dima.k@fisha.co.il",
                     "paymentMethod":{
                         "method":"safecharge",
-                        "additional_data":{
-                            "cc_save":false,
-                            "cc_cid":"332",
-                            "cc_type":"MC",
-                            "cc_exp_year":"2022",
-                            "cc_exp_month":"3",
-                            "cc_number":"5333 3394 6913 0529",
-                            "cc_owner":"The Tester"
-                        }
+                        "additional_data":storage.creditCard()
                     },
                     "billingAddress":{
                         "countryId":"SY",

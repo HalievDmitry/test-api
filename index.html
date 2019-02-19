@@ -45,5 +45,36 @@
     <button data-bind="click: validateCard">Validate Card</button>
     <input type="text" data-bind="value: cardType()" />
 
+    <br/>
+    <br/>
+    <br/>
+    <form data-bind="submit: placeSafecharge">
+        <div>
+            <label>Card Number</label>
+            <input type="text" name="cc_number" data-bind="value: creditCard().cc_number">
+        </div>
+        <div>
+            <label>Exp Month</label>
+            <input type="text" name="cc_exp_month" data-bind="value: creditCard().cc_exp_month">
+        </div>
+        <div>
+            <label>Exp Year</label>
+            <input type="text" name="cc_exp_year" data-bind="value: creditCard().cc_exp_year">
+        </div>
+        <div>
+            <label>Card Owner</label>
+            <input type="text" name="cc_owner" data-bind="value: creditCard().cc_owner">
+        </div>
+        <div>
+            <label>CVV</label>
+            <input type="text" name="cc_cid" data-bind="value: creditCard().cc_cid">
+        </div>
+
+        <input type="hidden" name="cc_type" data-bind="value: creditCard().cc_type">
+
+
+        <div><button type="submit">Submit SafeCharge</button></div>
+    </form>
+
 </body>
 </html>

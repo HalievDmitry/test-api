@@ -3,16 +3,17 @@ require([
     'rest',
     'ko',
     'component/credit-card/validator',
-    'component/url-builder'
-], function($, rest, ko, cardValidator, buildUrl) {
+    'component/url-builder',
+    'component/utils',
+    'component/storage'
+], function($, rest, ko, cardValidator, buildUrl, utils, storage) {
     'use strict';
 
     function mainPageViewModel() {
         this.customerData = ko.observable([]);
         this.guestCheckout = ko.observable(true);
         this.cart = ko.observable([]);
-
-        this.creditCard = ko.observable({});
+        this.creditCard = storage.creditCard;
         this.cardType = ko.observable('');
 
         var self = this;
@@ -154,8 +155,18 @@ require([
             });
         };
 
-        this.placeSafecharge = function () {
-            var quoteId;
+        this.placeSafecharge = function (form) {
+            var data = utils.formData(form),
+                result = cardValidator(data.cc_number),
+                quoteId;
+
+            if (result.isValid && result.card.type) {
+                data.cc_type = result.card.type;
+                this.creditCard($.extend(this.creditCard(), data));
+            } else {
+g                return;
+            }
+
             if (!this.customerData().customer_id) {
                 quoteId = this.customerData().quote_id;
             }
