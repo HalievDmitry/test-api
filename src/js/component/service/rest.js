@@ -86,28 +86,28 @@ define([
                 data = {
                     "addressInformation":{
                         "shipping_address":{
-                            "countryId":"SY",
+                            "countryId":"GB",
                             "region":"",
                             "street":[
-                                "asdasdasd"
+                                "Street2"
                             ],
                             "company":"",
                             "telephone":"123123123123",
                             "postcode":"123123",
-                            "city":"asdasdasd",
+                            "city":"City 1",
                             "firstname":"Dmitry",
                             "lastname":"Khaliev"
                         },
                         "billing_address":{
-                            "countryId":"SY",
+                            "countryId":"GB",
                             "region":"",
                             "street":[
-                                "asdasdasd"
+                                "Street2"
                             ],
                             "company":"",
                             "telephone":"123123123123",
                             "postcode":"123123",
-                            "city":"asdasdasd",
+                            "city":"City 1",
                             "firstname":"Dmitry",
                             "lastname":"Khaliev",
                             "saveInAddressBook":null
@@ -125,28 +125,28 @@ define([
                 data = {
                     "addressInformation":{
                         "shipping_address":{
-                            "countryId":"SY",
+                            "countryId":"GB",
                             "region":"",
                             "street":[
-                                "asdasdasd"
+                                "Street2"
                             ],
                             "company":"",
                             "telephone":"123123123123",
                             "postcode":"123123",
-                            "city":"asdasdasd",
+                            "city":"City 1",
                             "firstname":"Dmitry",
                             "lastname":"Khaliev"
                         },
                         "billing_address":{
-                            "countryId":"SY",
+                            "countryId":"GB",
                             "region":"",
                             "street":[
-                                "asdasdasd"
+                                "Street2"
                             ],
                             "company":"",
                             "telephone":"123123123123",
                             "postcode":"123123",
-                            "city":"asdasdasd",
+                            "city":"City 1",
                             "firstname":"Dmitry",
                             "lastname":"Khaliev",
                             "saveInAddressBook":null
@@ -166,18 +166,23 @@ define([
                     "cartId":cartId,
                     "email":"dima.k@fisha.co.il",
                     "paymentMethod":{
-                        "method":"paypal_express"
+                        "method":"paypal_express",
+                        "extension_attributes": {
+                            "agreement_ids": [
+                                "1"
+                            ]
+                        }
                     },
                     "billingAddress":{
-                        "countryId":"SY",
+                        "countryId":"GB",
                         "region":"",
                         "street":[
-                            "asdasdasd"
+                            "Street2"
                         ],
                         "company":"",
                         "telephone":"123123123123",
                         "postcode":"123123",
-                        "city":"asdasdasd",
+                        "city":"City 1",
                         "firstname":"Dmitry",
                         "lastname":"Khaliev",
                         "saveInAddressBook":null
@@ -198,15 +203,15 @@ define([
                         "additional_data":storage.creditCard()
                     },
                     "billingAddress":{
-                        "countryId":"SY",
+                        "countryId":"GB",
                         "region":"",
                         "street":[
-                            "asdasdasd"
+                            "Street2"
                         ],
                         "company":"",
                         "telephone":"123123123123",
                         "postcode":"123123",
-                        "city":"asdasdasd",
+                        "city":"City 1",
                         "firstname":"Dmitry",
                         "lastname":"Khaliev",
                         "saveInAddressBook":null

@@ -6,8 +6,9 @@ define([
     'component/service/url-builder',
     'component/utils',
     'component/service/storage',
-    'component/totals'
-], function($, rest, ko, template, buildUrl, utils, storage, totals) {
+    'component/totals',
+    'paypalInContext'
+], function($, rest, ko, template, buildUrl, utils, storage, totals, paypalExpressCheckout) {
 
     return {
         viewModel: function (params) {
@@ -99,6 +100,91 @@ define([
                 windowObj.close();
             };
 
+
+            /**
+             * Magento's solution. Based on button linking.
+             * @type {{environment: string, locale: string, button: [string], click: exports.clientConfig.click}}
+             */
+            /*
+            this.clientConfig = {
+                "environment": "sandbox",
+                "locale": "en_US",
+                "button": ["paypal-place-btn"],
+                click: function () {
+                    var quoteId;
+                    if (!self.customerData().customer_id) {
+                        quoteId = self.customerData().quote_id;
+                    }
+                    paypalExpressCheckout.checkout.initXO()
+                    var url = buildUrl('paypal/express/gettoken/');
+                    rest.placePaypal(quoteId).then(function (data) {
+                        if (data === true) {
+                            $.getJSON(url, {
+                                button: 0
+                            }).done(function (response) {
+                                var message = response && response.message;
+
+                                if (message) {
+                                    if (message.type === 'error') {
+                                        console.log(message);
+                                    } else {
+                                        console.log(message);
+                                    }
+                                }
+                                console.log(response);
+                                if (response && response.url) {
+                                    paypalExpressCheckout.checkout.startFlow(response.url);
+                                    return;
+                                }
+                                paypalExpressCheckout.checkout.closeFlow();
+                            }).fail(function () {
+                                paypalExpressCheckout.checkout.closeFlow();
+                            }).always(function () {
+                                // console.log('errrroooooorrr');
+                            });
+                        }
+                    }).catch(function (err) {
+                        console.error(err);
+                        paypalExpressCheckout.checkout.closeFlow();
+                    });
+                }
+            };
+
+            initClient = function () {
+                var selector = '#paypal-place-btn',
+                    clientInit;
+
+                $.each(self.clientConfig, function (name, fn) {
+                    if (typeof fn === 'function') {
+                        self.clientConfig[name] = fn.bind(self);
+                    }
+                });
+                console.log(self.clientConfig);
+
+                if (!clientInit) {
+                    paypalExpressCheckout.checkout.setup('A6VD24NDVY9XJ', self.clientConfig);
+                    console.log(self.clientConfig);
+                    clientInit = true;
+                } else {
+                    $(selector).on('click', self.clientConfig.click);
+                }
+
+                return this;
+            };
+            // initClient();
+
+            */
+            /**
+             * END of Magento's solution
+             */
+
+
+
+            paypalExpressCheckout.checkout.setup('A6VD24NDVY9XJ', {
+                "environment": "sandbox",
+                "locale": "en_US"
+            });
+
             this.loginGoogle = function () {
                 this.customerData().social_config.forEach(function (config) {
                     if (config.label == 'Google') {
@@ -152,13 +238,36 @@ define([
                 if (!this.customerData().customer_id) {
                     quoteId = this.customerData().quote_id;
                 }
+                paypalExpressCheckout.checkout.initXO()
+                var url = buildUrl('paypal/express/gettoken/');
                 rest.placePaypal(quoteId).then(function (data) {
                     if (data === true) {
-                        console.log(data);
-                        window.location.href = buildUrl('paypal/express/start/');
+                        $.getJSON(url, {
+                            button: 0
+                        }).done(function (response) {
+                            var message = response && response.message;
+
+                            if (message) {
+                                if (message.type === 'error') {
+                                    console.log(message);
+                                } else {
+                                    console.log(message);
+                                }
+                            }
+                            console.log(response);
+                            if (response && response.url) {
+                                paypalExpressCheckout.checkout.startFlow(response.url);
+                                // return;
+                            }
+                        }).fail(function () {
+                            paypalExpressCheckout.checkout.closeFlow();
+                        }).always(function () {
+                            console.log('errrroooooorrr');
+                        });
                     }
                 }).catch(function (err) {
                     console.error(err);
+                    paypalExpressCheckout.checkout.closeFlow();
                 });
             };
 
