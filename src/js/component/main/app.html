@@ -1,0 +1,54 @@
+<div class="main-content">
+    <table>
+        <tr>
+            <td>Quote ID</td>
+            <td></td>
+            <td data-bind="text: customerData().quote_id"></td>
+        </tr>
+        <tr>
+            <td>Customer ID</td>
+            <td></td>
+            <td data-bind="text: customerData().customer_id"></td>
+        </tr>
+        <tr>
+            <td>Customer Token</td>
+            <td></td>
+            <td data-bind="text: customerData().customer_token"></td>
+        </tr>
+    </table>
+
+    <button data-bind="click: loginGoogle">Login with Google</button>
+    <button data-bind="click: loginFacebook">Login with Facebook</button>
+    <button data-bind="click: signIn">Sign in</button>
+    <button data-bind="click: createAccount">Create Account</button>
+    <button data-bind="click: getGuestShippings">Get Guest Shipping Methods</button>
+    <button data-bind="click: getCustomerShippings">Get Customer Shipping Methods</button>
+    <button data-bind="click: setGuestShipping">Set Guest Shipping Info</button>
+    <button data-bind="click: setCustomerShipping">Set Customer Shipping Info</button>
+    <button data-bind="click: placePaypal">PayPal</button>
+
+    <button data-bind="click: getPaymentInfo">Get Payment Information</button>
+
+
+    <br/>
+
+    <br/><br/>
+    <!-- ko component: {
+        name: "coupon-form",
+        params: { parent: $data }
+    } -->
+    <!-- /ko -->
+
+    <br/><br/>
+    <!-- ko component: "safecharge-form" -->
+    <!-- /ko -->
+
+    <div class="totals">
+        <div data-bind="foreach: Object.keys(totals())">
+            <div data-bind="if: typeof $parent.totals()[$data] !== 'object'">
+                <span data-bind="text: $data"></span>
+                <span data-bind="text: $parent.totals()[$data]"></span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -14,7 +14,9 @@ define([
             cc_save: false
         }),
 
-        couponCode: ko.observable('')
+        couponCode: ko.observable(''),
+
+        customerData: ko.observable({})
     }
 
 });

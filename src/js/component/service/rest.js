@@ -1,7 +1,7 @@
 define([
     'jquery',
-    'component/url-builder',
-    'component/storage',
+    'component/service/url-builder',
+    'component/service/storage',
     'component/ajax/client'
 ], function ($, buildUrl, storage, client) {
     'use strict';
@@ -218,7 +218,7 @@ define([
 
         applyCoupon: function (cartId) {
             var url = cartId ? buildUrl('rest/default/V1/guest-carts/'+cartId+'/coupons/'+ storage.couponCode()) :
-                buildUrl('rest/default/V1/carts/mine/coupons/'+code);
+                buildUrl('rest/default/V1/carts/mine/coupons/' + storage.couponCode());
 
             return client.put(url);
         },
@@ -228,6 +228,12 @@ define([
                 buildUrl('rest/default/V1/carts/mine/coupons');
 
             return client.delete(url);
+        },
+
+        getPaymentInfo: function (cartId) {
+            var url = cartId ? buildUrl('rest/default/V1/guest-carts/'+cartId+'/payment-information') :
+                buildUrl('rest/default/V1/carts/mine/payment-information');
+            return client.get(url);
         }
 
     };
