@@ -3,8 +3,7 @@ define([
 ], function (ko) {
     'use strict';
 
-    return {
-        creditCard: ko.observable({
+    var creditCard = ko.observable({
             cc_number: '5333339469130529',
             cc_exp_month: '3',
             cc_exp_year: '2022',
@@ -13,10 +12,23 @@ define([
             cc_type: null,
             cc_save: false
         }),
+        couponCode = ko.observable(''),
+        customerData = ko.observable({});
 
-        couponCode: ko.observable(''),
+    return {
+        creditCard: creditCard,
 
-        customerData: ko.observable({})
+        couponCode: couponCode,
+
+        customerData: customerData,
+
+        customerIsGuest: ko.computed(function () {
+            return (!(customerData() && customerData().customer_id));
+        }, this),
+
+        quoteId: ko.computed(function () {
+            return customerData() && customerData().quote_id;
+        })
     }
 
 });

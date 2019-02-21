@@ -17,17 +17,19 @@
         </tr>
     </table>
 
-    <button data-bind="click: loginGoogle">Login with Google</button>
-    <button data-bind="click: loginFacebook">Login with Facebook</button>
-    <button data-bind="click: signIn">Sign in</button>
-    <button data-bind="click: createAccount">Create Account</button>
+    <!-- ko component: {
+        name: "login-form",
+        params: { parent: $data }
+    } -->
+    <!-- /ko -->
     <button data-bind="click: getGuestShippings">Get Guest Shipping Methods</button>
     <button data-bind="click: getCustomerShippings">Get Customer Shipping Methods</button>
     <button data-bind="click: setGuestShipping">Set Guest Shipping Info</button>
     <button data-bind="click: setCustomerShipping">Set Customer Shipping Info</button>
-    <button data-bind="click: placePaypal">PayPal</button>
+    <!-- ko component: "paypal-button" -->
+    <!-- /ko -->
 
-    <button id="paypal-place-btn">PayPal test 2</button>
+    <!--<button id="paypal-place-btn">PayPal test 2</button>-->
 
     <button data-bind="click: getPaymentInfo">Get Payment Information</button>
 
