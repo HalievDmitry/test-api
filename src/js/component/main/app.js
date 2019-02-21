@@ -24,6 +24,8 @@ define([
             var initSession = function () {
                 rest.initSession().then(function (data) {
                     self.customerData(data);
+
+                    self._setupPaypal();
                 }).catch(function (err) {
                     console.error(err);
                 });
@@ -100,7 +102,6 @@ define([
                 windowObj.close();
             };
 
-
             /**
              * Magento's solution. Based on button linking.
              * @type {{environment: string, locale: string, button: [string], click: exports.clientConfig.click}}
@@ -110,12 +111,13 @@ define([
                 "environment": "sandbox",
                 "locale": "en_US",
                 "button": ["paypal-place-btn"],
-                click: function () {
+                click: function (event) {
+                    event.preventDefault();
                     var quoteId;
                     if (!self.customerData().customer_id) {
                         quoteId = self.customerData().quote_id;
                     }
-                    paypalExpressCheckout.checkout.initXO()
+                    paypalExpressCheckout.checkout.initXO();
                     var url = buildUrl('paypal/express/gettoken/');
                     rest.placePaypal(quoteId).then(function (data) {
                         if (data === true) {
@@ -171,19 +173,18 @@ define([
 
                 return this;
             };
-            // initClient();
-
+            initClient();
             */
             /**
              * END of Magento's solution
              */
 
-
-
-            paypalExpressCheckout.checkout.setup('A6VD24NDVY9XJ', {
-                "environment": "sandbox",
-                "locale": "en_US"
-            });
+            this._setupPaypal = function () {
+                paypalExpressCheckout.checkout.setup(self.customerData().paypal_config.merchant_id, {
+                    "environment": self.customerData().paypal_config.environment,
+                    "locale": self.customerData().paypal_config.locale
+                });
+            }
 
             this.loginGoogle = function () {
                 this.customerData().social_config.forEach(function (config) {
@@ -238,8 +239,9 @@ define([
                 if (!this.customerData().customer_id) {
                     quoteId = this.customerData().quote_id;
                 }
-                paypalExpressCheckout.checkout.initXO()
-                var url = buildUrl('paypal/express/gettoken/');
+                paypalExpressCheckout.checkout.initXO();
+
+                var url = self.customerData().paypal_config.path;
                 rest.placePaypal(quoteId).then(function (data) {
                     if (data === true) {
                         $.getJSON(url, {
@@ -257,12 +259,12 @@ define([
                             console.log(response);
                             if (response && response.url) {
                                 paypalExpressCheckout.checkout.startFlow(response.url);
-                                // return;
+                                return;
                             }
                         }).fail(function () {
                             paypalExpressCheckout.checkout.closeFlow();
                         }).always(function () {
-                            console.log('errrroooooorrr');
+                            console.log('seems it\'s working');
                         });
                     }
                 }).catch(function (err) {
