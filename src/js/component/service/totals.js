@@ -5,7 +5,7 @@ define([
 ], function (ko, rest, storage) {
     'use strict';
 
-    var totals = ko.observable({});
+    var totals = ko.observable({}).extend({persist: {session: 'totals'}});
 
     return {
 

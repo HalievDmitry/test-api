@@ -5,11 +5,16 @@ requirejs.config({
         rest: 'component/service/rest',
         ko: 'lib/knockout-3.4.2',
         paypalInContext: 'https://www.paypalobjects.com/api/checkout',
-        text: 'lib/text'
+        observableStorage: 'lib/knockout.observableStorage',
+        text: 'lib/text',
+        underscore: 'lib/underscore.min'
     },
     shim: {
         paypalInContext: {
             exports: 'paypal'
+        },
+        ko: {
+            deps: ['underscore', 'observableStorage']
         }
     }
 });

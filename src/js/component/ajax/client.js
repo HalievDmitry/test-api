@@ -22,6 +22,7 @@ define([
         },
         
         _makeRequest: function (method, url, data) {
+            console.log('------------request', url);
             return new Promise(function (resolve, reject) {
                 var options = {
                     method: method,

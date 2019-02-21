@@ -11,9 +11,10 @@ define([
             cc_cid: '332',
             cc_type: null,
             cc_save: false
-        }),
-        couponCode = ko.observable(''),
-        customerData = ko.observable({});
+        }).extend({persist: {session: 'credit-card'}}),
+        couponCode = ko.observable('').extend({persist: {session: 'coupon-code'}}),
+        customerData = ko.observable({}).extend({persist: {session: 'customer-data'}}),
+        cart = ko.observable({}).extend({persist: {session: 'cart'}});
 
     return {
         creditCard: creditCard,
@@ -28,7 +29,9 @@ define([
 
         quoteId: ko.computed(function () {
             return customerData() && customerData().quote_id;
-        })
+        }),
+
+        cart: cart
     }
 
 });

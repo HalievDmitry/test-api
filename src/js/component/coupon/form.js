@@ -2,8 +2,9 @@ define([
     'ko',
     'text!./form.html',
     'component/service/storage',
-    'rest'
-], function(ko, template, storage, rest) {
+    'rest',
+    'component/service/totals'
+], function(ko, template, storage, rest, totals) {
 
     return {
         viewModel: function (params) {
@@ -16,7 +17,7 @@ define([
                     quoteId = this.customerData().quote_id;
                 }
                 rest.applyCoupon(quoteId).then(function (data) {
-                    params.parent.updateTotals();
+                    totals.collect();
                     console.log(data);
                 }).catch(function (err) {
                     console.error(err);
@@ -29,7 +30,8 @@ define([
                     quoteId = this.customerData().quote_id;
                 }
                 rest.deleteCoupon(quoteId).then(function (data) {
-                    params.parent.updateTotals();
+                    totals.collect();
+                    storage.couponCode('');
                     console.log(data);
                 }).catch(function (err) {
                     console.error(err);

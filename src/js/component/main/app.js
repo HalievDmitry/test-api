@@ -13,44 +13,56 @@ define([
         viewModel: function (params) {
             this.customerData = storage.customerData;
             this.guestCheckout = ko.observable(true);
-            this.cart = ko.observable([]);
+            this.cart = storage.cart;
             this.cardType = ko.observable('');
             this.totals = totals.getTotals();
 
             var self = this;
 
             this.initSession = function () {
-                rest.initSession().then(function (data) {
-                    self.customerData(data);
-                }).catch(function (err) {
-                    console.error(err);
-                });
+                if (!this.customerData() || !storage.quoteId()) {
+                    rest.initSession().then(function (data) {
+                        self.customerData(data);
+                    }).catch(function (err) {
+                        console.error(err);
+                    });
+                } else {
+                    self.initData(this.customerData());
+                }
             };
+
+            this.initData = function(data) {
+                if (data) {
+                    if (data.customer_id) {
+                        self.guestCheckout(false);
+                        if (_.isEmpty(self.cart())) {
+                            rest.getCustomerCart().then(function (data) {
+                                console.log(data);
+                                self.cart(data);
+                                totals.collect();
+                            }).catch(function (err) {
+                                console.error(err);
+                            });
+                        }
+                    } else if (data.quote_id) {
+                        if (!self.cart()) {
+                            var quoteId = data.quote_id;
+                            rest.getGuestCart(quoteId).then(function (data) {
+                                console.log(data);
+                                totals.collect();
+                                self.cart(data);
+                            }).catch(function (err) {
+                                console.error(err);
+                            });
+                        }
+                    }
+                }
+            };
+
             this.initSession();
 
             this.customerData.subscribe(function (data) {
-                if (data) {
-                    console.log(data);
-                    if (data.customer_id) {
-                        self.guestCheckout(false);
-                        rest.getCustomerCart().then(function (data) {
-                            console.log(data);
-                            self.cart(data);
-                            totals.collect();
-                        }).catch(function (err) {
-                            console.error(err);
-                        });
-                    } else if(data.quote_id) {
-                        var quoteId = data.quote_id;
-                        rest.getGuestCart(quoteId).then(function (data) {
-                            console.log(data);
-                            totals.collect();
-                            self.cart(data);
-                        }).catch(function (err) {
-                            console.error(err);
-                        });
-                    }
-                }
+                self.initData(data);
             });
 
             this.getGuestShippings = function () {
